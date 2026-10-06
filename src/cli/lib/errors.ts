@@ -1,8 +1,4 @@
 // Adapted from voltr-integration-scripts apps/cli/src/lib/errors.ts (19072d0).
-import {
-  ProfileFieldError,
-  ProfileValidationError,
-} from "../../core/profile.js";
 
 /**
  * A user-facing error. Its message is printed without a stack trace, so use it
@@ -16,23 +12,13 @@ export class CliError extends Error {
   }
 }
 
-const EXPECTED_ERRORS = [
-  CliError,
-  ProfileValidationError,
-  ProfileFieldError,
-] as const;
-
-function isExpected(error: unknown): error is Error {
-  return EXPECTED_ERRORS.some((type) => error instanceof type);
-}
-
 /**
  * Top-level error handler for the CLI. Known, actionable errors print just
  * their message; anything unexpected prints `Error: <message>` and only shows a
  * stack trace when DEBUG is set. Always exits non-zero.
  */
 export function reportError(error: unknown): never {
-  if (isExpected(error)) {
+  if (error instanceof CliError) {
     console.error(error.message);
   } else if (error instanceof Error) {
     console.error(`Error: ${error.message}`);

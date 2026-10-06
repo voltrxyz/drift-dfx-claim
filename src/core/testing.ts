@@ -1,25 +1,12 @@
 // Adapted from voltr-integration-scripts packages/core/src/testing.ts (19072d0).
 import assert from "node:assert/strict";
-import {
-  address,
-  type Address,
-  type Blockhash,
-  type Instruction,
-} from "@solana/kit";
+import { type Address, type Blockhash, type Instruction } from "@solana/kit";
 import type { ScriptContext, BuiltOperation, SolanaRpc } from "./types.js";
-import type { ScriptProfile } from "./profile.js";
 
 /**
  * Offline test helpers for exercising operation builders without a live RPC.
  * Unconfigured read methods fail instead of reaching a network transport.
  */
-
-// Builders receive profile values as explicit args, so these valid placeholders
-// never affect their output.
-const FAKE_ASSET_MINT = address("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
-const FAKE_TOKEN_PROGRAM = address(
-  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-);
 
 // Truthy stand-in for tests that exercise builders and decoders with
 // account-existence-dependent RPC reads.
@@ -106,8 +93,6 @@ export function createFakeRpc(options: FakeRpcOptions = {}): SolanaRpc {
 }
 
 export interface FakeScriptContextOptions {
-  /** Override the stub profile. Builders should not read it, but queries may. */
-  profile?: ScriptProfile;
   /** Override the fake RPC entirely. */
   rpc?: SolanaRpc;
   /** Placeholder RPC URL (never dialed by offline tests). */
@@ -123,17 +108,7 @@ export interface FakeScriptContextOptions {
 export function createFakeScriptContext(
   options: FakeScriptContextOptions = {},
 ): ScriptContext {
-  const profile: ScriptProfile = options.profile ?? {
-    name: "fake-profile",
-    cluster: "devnet",
-    vault: {
-      vaultAddress: FAKE_ASSET_MINT,
-      assetTokenProgram: FAKE_TOKEN_PROGRAM,
-    },
-  };
-
   return {
-    profile,
     rpcUrl: options.rpcUrl ?? "http://localhost:8899",
     rpc:
       options.rpc ??

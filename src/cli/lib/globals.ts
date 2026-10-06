@@ -1,7 +1,6 @@
 // Adapted from voltr-integration-scripts apps/cli/src/lib/globals.ts (19072d0).
 import { Command, Option } from "commander";
-import { createRpcScriptContext, createScriptContext } from "../../core/env.js";
-import { loadProfile, type ScriptProfile } from "../../core/profile.js";
+import { createScriptContext } from "../../core/env.js";
 import type { Address } from "@solana/kit";
 import type {
   PriorityFeeStrategy,
@@ -19,7 +18,6 @@ export type PriorityFeeKind = (typeof PRIORITY_FEE_KINDS)[number];
 
 /** Options declared on the root program and shared by every command. */
 export interface GlobalOptions {
-  profile?: string;
   rpcUrl?: string;
   mode: TxMode;
   multisigAddress?: string;
@@ -35,15 +33,9 @@ export interface GlobalOptions {
  */
 export function addGlobalOptions(program: Command): Command {
   return program
-    .addOption(
-      new Option(
-        "--profile <path>",
-        "JSON profile path (or VOLTR_PROFILE env)",
-      ).env("VOLTR_PROFILE"),
-    )
     .option(
       "--rpc-url <url>",
-      "RPC URL override (else RPC_URL / HELIUS_RPC_URL env, else profile.rpcUrl)",
+      "RPC URL override (else RPC_URL / HELIUS_RPC_URL env)",
     )
     .addOption(
       new Option("--mode <mode>", "transaction mode")
@@ -72,45 +64,12 @@ export function addGlobalOptions(program: Command): Command {
 
 export interface CommandContext {
   globals: GlobalOptions;
-  profile: ScriptProfile;
   ctx: ScriptContext;
 }
 
-export interface RpcCommandContext {
-  globals: GlobalOptions;
-  ctx: ScriptContext;
-}
-
-export function requireProfilePath(
-  globals: GlobalOptions,
-  options?: { command?: string },
-): string {
-  if (!globals.profile) {
-    const command = options?.command ? ` for command "${options.command}"` : "";
-    throw new CliError(`--profile <path> is required${command}.`);
-  }
-  return globals.profile;
-}
-
-/**
- * Load and validate the profile named by the global `--profile` flag and build
- * the RPC-backed `ScriptContext`. Used by profile-backed transaction commands
- * so the "read globals → load profile → make context" boilerplate lives in one
- * place.
- */
-export async function loadCommandContext(
-  program: Command,
-  options?: { command?: string },
-): Promise<CommandContext> {
+export function loadCommandContext(program: Command): CommandContext {
   const globals = program.opts<GlobalOptions>();
-  const profile = await loadProfile(requireProfilePath(globals, options));
-  const ctx = createScriptContext(profile, globals.rpcUrl);
-  return { globals, profile, ctx };
-}
-
-export function loadRpcCommandContext(program: Command): RpcCommandContext {
-  const globals = program.opts<GlobalOptions>();
-  const ctx = createRpcScriptContext(globals.rpcUrl);
+  const ctx = createScriptContext(globals.rpcUrl);
   return { globals, ctx };
 }
 

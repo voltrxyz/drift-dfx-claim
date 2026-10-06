@@ -7,23 +7,8 @@ import {
   optionalAddress,
   parseBigintAmount,
 } from "./env.js";
-import type { ScriptProfile } from "./profile.js";
 
 const USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
-const TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
-
-function profile(rpcUrl?: string): ScriptProfile {
-  return {
-    name: "ctx-test",
-    cluster: "devnet",
-    rpcUrl,
-    vault: {
-      vaultAddress: USDC,
-      assetMintAddress: USDC,
-      assetTokenProgram: TOKEN_PROGRAM,
-    },
-  };
-}
 
 /** Run `fn` with specific env vars set/cleared, restoring originals after. */
 function withEnv(
@@ -78,10 +63,7 @@ test("parseBigintAmount rejects non-numeric / decimal / negative strings", () =>
 test("asAddress returns a valid address and rejects empty input", () => {
   assert.equal(asAddress(USDC), USDC);
   assert.throws(() => asAddress(""), /address is required/);
-  assert.throws(
-    () => asAddress("", "vault.vaultAddress"),
-    /vault\.vaultAddress/,
-  );
+  assert.throws(() => asAddress("", "--vault"), /--vault/);
 });
 
 test("optionalAddress returns undefined for empty/undefined input", () => {
@@ -93,38 +75,38 @@ test("optionalAddress returns undefined for empty/undefined input", () => {
 // --- createScriptContext RPC precedence ---
 
 test("createScriptContext prefers the explicit override URL", () => {
-  withEnv({ RPC_URL: "http://env:8899", HELIUS_RPC_URL: undefined }, () => {
-    const ctx = createScriptContext(
-      profile("http://profile:8899"),
-      "http://override:8899",
-    );
-    assert.equal(ctx.rpcUrl, "http://override:8899");
-  });
+  withEnv(
+    { RPC_URL: "http://env:8899", HELIUS_RPC_URL: "http://helius:8899" },
+    () => {
+      const ctx = createScriptContext("http://override:8899");
+      assert.equal(ctx.rpcUrl, "http://override:8899");
+    },
+  );
 });
 
 test("createScriptContext falls back to RPC_URL, then HELIUS_RPC_URL", () => {
   withEnv(
     { RPC_URL: "http://env:8899", HELIUS_RPC_URL: "http://helius:8899" },
     () => {
-      assert.equal(createScriptContext(profile()).rpcUrl, "http://env:8899");
+      assert.equal(createScriptContext().rpcUrl, "http://env:8899");
     },
   );
   withEnv({ RPC_URL: undefined, HELIUS_RPC_URL: "http://helius:8899" }, () => {
-    assert.equal(createScriptContext(profile()).rpcUrl, "http://helius:8899");
+    assert.equal(createScriptContext().rpcUrl, "http://helius:8899");
   });
 });
 
-test("createScriptContext falls back to the profile rpcUrl", () => {
-  withEnv({ RPC_URL: undefined, HELIUS_RPC_URL: undefined }, () => {
-    assert.equal(
-      createScriptContext(profile("http://profile:8899")).rpcUrl,
-      "http://profile:8899",
-    );
+test("createScriptContext treats empty RPC sources as unset", () => {
+  withEnv({ RPC_URL: "", HELIUS_RPC_URL: "http://helius:8899" }, () => {
+    assert.equal(createScriptContext("").rpcUrl, "http://helius:8899");
   });
 });
 
 test("createScriptContext throws when no RPC URL is resolvable", () => {
   withEnv({ RPC_URL: undefined, HELIUS_RPC_URL: undefined }, () => {
-    assert.throws(() => createScriptContext(profile()), /RPC URL is required/);
+    assert.throws(() => createScriptContext(), {
+      message:
+        "RPC URL is required. Pass --rpc-url, or set RPC_URL or HELIUS_RPC_URL.",
+    });
   });
 });

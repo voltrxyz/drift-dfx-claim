@@ -5,7 +5,5 @@ dist/
 !.env.example
 *.log
 .DS_Store
-# Operators keep their profiles private; the shared examples are tracked.
-configs/*
-!configs/examples/
-!configs/examples/**
+# 0.1.0 used JSON profiles here, which could hold API-keyed RPC URLs.
+configs/

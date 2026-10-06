@@ -1,9 +1,5 @@
 import { Option, type Command } from "commander";
 import {
-  resolveLookupTableAddresses,
-  requireVaultAddress,
-} from "../../core/profile.js";
-import {
   processOperation,
   type ProcessOperationArgs,
 } from "../../core/tx/processor.js";
@@ -11,7 +7,6 @@ import {
   buildDfxSetupOperation,
   buildDfxClaimOperation,
 } from "../../dfx/operations.js";
-import { deriveDfxStrategyAccounts } from "../../dfx/pda.js";
 import { queryDfxStatus } from "../../dfx/queries.js";
 import {
   DFX_UPGRADE_HINT,
@@ -22,18 +17,21 @@ import { loadCommandContext, resolveProcessorOptions } from "../lib/globals.js";
 import { addRoleKeypairOption, loadDfxManager } from "../lib/signers.js";
 import { parseAddress } from "../lib/parse.js";
 import { printField, printJson, printLine } from "../lib/output.js";
-import { loadEligibility } from "../lib/eligibility.js";
+import { createEligibilityLoader } from "../lib/eligibility.js";
+import { resolveDfxStrategy } from "../lib/strategy.js";
 import { CliError } from "../lib/errors.js";
 
 interface StrategyOptions {
-  strategy: string;
+  vault: string;
+  strategy?: string;
   managerKeypair?: string;
   recipient?: string;
+  lookupTable?: string;
+  distributor?: string;
+  eligibilityFile?: string;
 }
 interface ClaimOptions extends StrategyOptions {
   recipientTokenAccount?: string;
-  distributor?: string;
-  eligibilityFile?: string;
 }
 
 async function processDfxOperation(args: ProcessOperationArgs): Promise<void> {
@@ -64,6 +62,7 @@ export function registerDfxCommands(program: Command): void {
     .description(
       "Read-only; no signer. Discovers this vault's Drift strategies unless --strategy is supplied.",
     )
+    .requiredOption("--vault <address>", "Voltr vault address")
     .option("--strategy <address>", "query only this Drift strategy")
     .option(
       "--eligibility-file <path>",
@@ -72,19 +71,22 @@ export function registerDfxCommands(program: Command): void {
     .option("--json", "print structured JSON")
     .action(
       async (options: {
+        vault: string;
         strategy?: string;
         eligibilityFile?: string;
         json?: boolean;
       }) => {
+        const vault = parseAddress(options.vault, "--vault");
         const strategy = options.strategy
           ? parseAddress(options.strategy, "--strategy")
           : undefined;
-        const { ctx, profile } = await loadCommandContext(program);
+        const { ctx } = loadCommandContext(program);
         const result = await queryDfxStatus(ctx, {
-          vault: requireVaultAddress(profile),
+          vault,
           strategy,
-          loadEligibility: (claimant) =>
-            loadEligibility({ claimant, file: options.eligibilityFile }),
+          loadEligibility: createEligibilityLoader({
+            file: options.eligibilityFile,
+          }),
         });
         if (options.json) {
           printJson(result);
@@ -101,7 +103,7 @@ export function registerDfxCommands(program: Command): void {
             "ATA balance",
             status.claimantTokenAccount.exists
               ? `${status.claimantTokenAccount.balanceDfx} DFX (${status.claimantTokenAccount.balanceBaseUnits} base units)`
-              : "missing; run dfx:setup",
+              : `missing; run dfx:setup --vault ${vault} --strategy ${status.strategy}`,
           );
           if (!status.allocations.length)
             printField("allocation", "no allocation");
@@ -127,29 +129,59 @@ export function registerDfxCommands(program: Command): void {
       .description(
         "Idempotent token-account setup. Supports PDA owners and multisig mode without a keypair.",
       )
-      .requiredOption("--strategy <address>", "Drift strategy address")
+      .requiredOption("--vault <address>", "Voltr vault address")
+      .option(
+        "--strategy <address>",
+        "Drift strategy (auto-select from unclaimed DFX allocations if omitted)",
+      )
+      .option("--lookup-table <address>", "existing address lookup table")
+      .option(
+        "--distributor <address>",
+        "limit strategy auto-selection to this distributor",
+      )
+      .option(
+        "--eligibility-file <path>",
+        "read eligibility JSON for auto-selection instead of the public API",
+      )
       .option(
         "--recipient <owner>",
         "also create this owner's DFX ATA (PDA owners allowed)",
       ),
     "manager",
   ).action(async (options: StrategyOptions) => {
-    const strategy = parseAddress(options.strategy, "--strategy");
+    const vault = parseAddress(options.vault, "--vault");
+    const strategyFilter = options.strategy
+      ? parseAddress(options.strategy, "--strategy")
+      : undefined;
+    const lookupTableAddresses = options.lookupTable
+      ? [parseAddress(options.lookupTable, "--lookup-table")]
+      : [];
+    const distributor = options.distributor
+      ? parseAddress(options.distributor, "--distributor")
+      : undefined;
     const recipient = options.recipient
       ? parseAddress(options.recipient, "--recipient")
       : undefined;
-    const { ctx, profile, globals } = await loadCommandContext(program);
+    const { ctx, globals } = loadCommandContext(program);
     const processorOptions = resolveProcessorOptions(globals);
     const { manager, payer } = await loadDfxManager(
       globals,
       options.managerKeypair,
     );
+    const { strategy } = await resolveDfxStrategy(ctx, {
+      vault,
+      strategy: strategyFilter,
+      distributor,
+      loadEligibility: createEligibilityLoader({
+        file: options.eligibilityFile,
+      }),
+    });
     const operation = await buildDfxSetupOperation(ctx, {
       manager,
-      vault: requireVaultAddress(profile),
+      vault,
       strategy,
       recipient,
-      lookupTableAddresses: resolveLookupTableAddresses(profile),
+      lookupTableAddresses,
     });
     await processDfxOperation({
       ctx,
@@ -169,7 +201,12 @@ export function registerDfxCommands(program: Command): void {
       .description(
         "Signs as vault manager OR admin. Preflight checks run in every mode; token accounts must already exist. Use dfx:setup first.",
       )
-      .requiredOption("--strategy <address>", "Drift strategy address")
+      .requiredOption("--vault <address>", "Voltr vault address")
+      .option(
+        "--strategy <address>",
+        "Drift strategy (auto-select from unclaimed DFX allocations if omitted)",
+      )
+      .option("--lookup-table <address>", "existing address lookup table")
       .addOption(
         new Option(
           "--recipient <owner>",
@@ -192,12 +229,18 @@ export function registerDfxCommands(program: Command): void {
       ),
     "manager",
   ).action(async (options: ClaimOptions) => {
+    const vault = parseAddress(options.vault, "--vault");
     if (!options.recipient && !options.recipientTokenAccount) {
       throw new CliError(
         "Provide exactly one of --recipient or --recipient-token-account.",
       );
     }
-    const strategy = parseAddress(options.strategy, "--strategy");
+    const strategyFilter = options.strategy
+      ? parseAddress(options.strategy, "--strategy")
+      : undefined;
+    const lookupTableAddresses = options.lookupTable
+      ? [parseAddress(options.lookupTable, "--lookup-table")]
+      : [];
     const recipient = options.recipient
       ? parseAddress(options.recipient, "--recipient")
       : undefined;
@@ -207,18 +250,22 @@ export function registerDfxCommands(program: Command): void {
     const distributor = options.distributor
       ? parseAddress(options.distributor, "--distributor")
       : undefined;
-    const { ctx, profile, globals } = await loadCommandContext(program);
+    const { ctx, globals } = loadCommandContext(program);
     const processorOptions = resolveProcessorOptions(globals);
     const { manager, payer } = await loadDfxManager(
       globals,
       options.managerKeypair,
     );
-    const vault = requireVaultAddress(profile);
-    const { claimant } = await deriveDfxStrategyAccounts(vault, strategy);
-    const eligibility = await loadEligibility({
-      claimant,
+    const loadEligibility = createEligibilityLoader({
       file: options.eligibilityFile,
     });
+    const { strategy, claimant } = await resolveDfxStrategy(ctx, {
+      vault,
+      strategy: strategyFilter,
+      distributor,
+      loadEligibility,
+    });
+    const eligibility = await loadEligibility(claimant);
     const operation = await buildDfxClaimOperation(ctx, {
       manager,
       vault,
@@ -227,7 +274,7 @@ export function registerDfxCommands(program: Command): void {
       recipientTokenAccount,
       distributor,
       eligibility,
-      lookupTableAddresses: resolveLookupTableAddresses(profile),
+      lookupTableAddresses,
     });
     await processDfxOperation({
       ctx,

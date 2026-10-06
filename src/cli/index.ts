@@ -2,7 +2,6 @@
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
-import { registerCheckCommand } from "./commands/check.js";
 import { registerDfxCommands } from "./commands/dfx.js";
 import { reportError } from "./lib/errors.js";
 import { addGlobalOptions } from "./lib/globals.js";
@@ -15,11 +14,10 @@ export function createProgram(): Command {
     )
     .showHelpAfterError("(run with --help for usage)");
   addGlobalOptions(program);
-  registerCheckCommand(program);
   registerDfxCommands(program);
   program.addHelpText(
     "after",
-    "\nRun via pnpm: pnpm cli -- --profile configs/my-vault.json dfx:status\nDefault mode is print. The manager or vault admin may claim.",
+    "\nRun via pnpm: pnpm cli -- dfx:status --vault <VAULT_ADDRESS>\nDefault mode is print. The manager or vault admin may claim.",
   );
   return program;
 }

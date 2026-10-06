@@ -134,3 +134,20 @@ test("empty discovery yields an empty status without calling eligibility", async
   });
   assert.deepEqual(result, { vault: vaultAddress, strategies: [] });
 });
+
+test("status rejects an address that is not a Voltr vault before discovery", async () => {
+  const { ctx } = await createClaimFixture({
+    getProgramAccounts: () => {
+      throw new Error("Unexpected discovery");
+    },
+  });
+  await assert.rejects(
+    queryDfxStatus(ctx, {
+      vault: address("11111111111111111111111111111112"),
+      loadEligibility: async () => {
+        throw new Error("Unexpected API access");
+      },
+    }),
+    /Vault/,
+  );
+});

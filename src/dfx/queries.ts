@@ -10,6 +10,7 @@ import {
 import type { ScriptContext } from "../core/types.js";
 import {
   decodeDriftStrategyReceipt,
+  loadDfxVault,
   loadDriftStrategyReceipt,
   readDfxTokenAccount,
 } from "./accounts.js";
@@ -26,6 +27,8 @@ export interface DfxStatusArgs {
 }
 
 export async function queryDfxStatus(ctx: ScriptContext, args: DfxStatusArgs) {
+  // Fail on a mistyped vault instead of reporting "no Drift strategies".
+  await loadDfxVault(ctx.rpc, args.vault);
   const strategies = args.strategy
     ? [args.strategy]
     : await discoverStrategies(ctx, args.vault);

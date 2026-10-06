@@ -161,12 +161,6 @@ export async function createClaimFixture(
     getAccountInfo: (key) => ({ value: accounts.get(key) ?? null }),
   });
   const ctx: ScriptContext = { rpcUrl: "http://offline.invalid", rpc };
-  // Any accidental profile read violates the operation-builder contract.
-  Object.defineProperty(ctx, "profile", {
-    get() {
-      throw new Error("Builder read ctx.profile");
-    },
-  });
   const args = {
     manager,
     vault: vaultAddress,

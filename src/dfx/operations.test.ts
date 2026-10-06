@@ -436,6 +436,21 @@ test("size: legacy claim, compute budget, v0 execution and multisig payload", as
   );
 });
 
+test("setup rejects a vault or strategy that is not a Voltr Drift strategy", async () => {
+  const { ctx, args, accounts } = await createClaimFixture();
+  const unknown = address("11111111111111111111111111111112");
+  await assert.rejects(
+    buildDfxSetupOperation(ctx, { ...args, vault: unknown }),
+    /Vault/,
+  );
+  await assert.rejects(
+    buildDfxSetupOperation(ctx, { ...args, strategy: unknown }),
+    /StrategyInitReceipt/,
+  );
+  accounts.delete(vaultAddress);
+  await assert.rejects(buildDfxSetupOperation(ctx, args), /Vault/);
+});
+
 test("setup uses idempotent ATA creates for off-curve claimant and recipient, and multisig payer", async () => {
   const { ctx, args } = await createClaimFixture();
   const recipient = address(golden.distributor);

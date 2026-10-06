@@ -24,13 +24,3 @@ export function printField(
 ): void {
   console.log(`  ${label.padEnd(labelWidth)}${value}`);
 }
-
-/** Abbreviate a long base58 address as `AbCd…WxYz` for compact summaries. */
-export function shortAddress(value: string): string {
-  return value.length <= 12 ? value : `${value.slice(0, 4)}…${value.slice(-4)}`;
-}
-
-/** Render an optional profile value as a short address or `(not set)`. */
-export function presence(value: string | undefined): string {
-  return value ? shortAddress(value) : "(not set)";
-}

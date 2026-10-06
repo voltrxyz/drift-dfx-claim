@@ -51,15 +51,6 @@ function makeCtx(): ScriptContext {
   } as unknown as ScriptContext["rpc"];
 
   return {
-    profile: {
-      name: "test",
-      cluster: "devnet",
-      vault: {
-        assetMintAddress: NOOP_PROGRAM,
-        assetTokenProgram: NOOP_PROGRAM,
-        vaultAddress: FAKE_VAULT,
-      },
-    },
     rpcUrl: "http://localhost:9999",
     rpc,
   };

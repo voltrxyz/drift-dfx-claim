@@ -48,10 +48,18 @@ export interface DfxSetupArgs {
 }
 
 export async function buildDfxSetupOperation(
-  _ctx: ScriptContext,
+  ctx: ScriptContext,
   args: DfxSetupArgs,
 ): Promise<BuiltOperation> {
-  const { claimant } = await deriveDfxStrategyAccounts(
+  const { claimant, strategyInitReceipt } = await deriveDfxStrategyAccounts(
+    args.vault,
+    args.strategy,
+  );
+  // A mistyped vault or strategy would otherwise fund an ATA for an unrelated PDA.
+  await loadDfxVault(ctx.rpc, args.vault);
+  await loadDriftStrategyReceipt(
+    ctx.rpc,
+    strategyInitReceipt,
     args.vault,
     args.strategy,
   );
@@ -209,7 +217,7 @@ export async function buildDfxClaimOperation(
     );
   }
 
-  const setupHint = " Run dfx:setup --strategy " + args.strategy + ".";
+  const setupHint = ` Run dfx:setup --vault ${args.vault} --strategy ${args.strategy}.`;
   const claimantToken = await readDfxTokenAccount(
     ctx.rpc,
     claimantTokenAccount,
@@ -234,7 +242,7 @@ export async function buildDfxClaimOperation(
   );
   if (!recipientToken) {
     throw new Error(
-      `Recipient DFX token account ${recipientTokenAccount} does not exist. Run dfx:setup --strategy ${args.strategy} --recipient <owner>, or supply an existing DFX token account.`,
+      `Recipient DFX token account ${recipientTokenAccount} does not exist. Run dfx:setup --vault ${args.vault} --strategy ${args.strategy} --recipient <owner>, or supply an existing DFX token account.`,
     );
   }
   if (recipientToken.owner === claimant)

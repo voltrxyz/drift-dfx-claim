@@ -1,13 +1,11 @@
 // Adapted from voltr-integration-scripts packages/core/src/types.ts (19072d0).
 import { createSolanaRpc, type Address, type Instruction } from "@solana/kit";
-import type { ScriptProfile } from "./profile.js";
 
 export type SolanaRpc = ReturnType<typeof createSolanaRpc>;
 
 export type TxMode = "execute" | "simulate" | "multisig" | "print";
 
 export interface ScriptContext {
-  profile?: ScriptProfile;
   rpcUrl: string;
   rpc: SolanaRpc;
 }

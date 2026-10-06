@@ -17,7 +17,7 @@ import {
   encodedAccount,
 } from "../../../test/fixtures.js";
 
-test("processor includes the profile LUT in a DFX multisig payload", async (context) => {
+test("processor includes the supplied LUT in a DFX multisig payload", async (context) => {
   const { ctx, args, accounts } = await createClaimFixture({
     blockhash: BLOCKHASH,
   });

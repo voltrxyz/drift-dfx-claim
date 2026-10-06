@@ -5,6 +5,7 @@ import { address } from "@solana/kit";
 import { DFX_ELIGIBILITY_API } from "../../dfx/constants.js";
 import {
   ELIGIBILITY_MAX_ATTEMPTS,
+  createEligibilityLoader,
   loadEligibility,
   parseEligibility,
 } from "./eligibility.js";
@@ -13,6 +14,37 @@ import {
   golden,
   managerAddress,
 } from "../../../test/fixtures.js";
+
+test("command eligibility cache shares in-flight loads, retries and 404 results per claimant", async () => {
+  const claimant = address(golden.vaultStrategyAuth);
+  const requests: Array<string> = [];
+  let transientFailure = true;
+  const load = createEligibilityLoader({
+    fetchFn: async (url) => {
+      requests.push(String(url));
+      if (url === `${DFX_ELIGIBILITY_API}/${managerAddress}`)
+        return new Response(null, { status: 404 });
+      assert.equal(url, `${DFX_ELIGIBILITY_API}/${claimant}`);
+      if (transientFailure) {
+        transientFailure = false;
+        return new Response(null, { status: 502 });
+      }
+      return new Response(JSON.stringify(eligibilityJson));
+    },
+    sleepFn: async () => {},
+  });
+  const first = load(claimant);
+  assert.equal(load(claimant), first);
+  assert.equal((await first)[0]!.amountUnlocked, 428519051459n);
+  assert.equal(load(claimant), first);
+  assert.deepEqual(await load(managerAddress), []);
+  assert.deepEqual(await load(managerAddress), []);
+  assert.deepEqual(requests, [
+    `${DFX_ELIGIBILITY_API}/${claimant}`,
+    `${DFX_ELIGIBILITY_API}/${claimant}`,
+    `${DFX_ELIGIBILITY_API}/${managerAddress}`,
+  ]);
+});
 
 test("eligibility loader supports the API and local file without losing integer precision", async () => {
   const claimant = address(golden.vaultStrategyAuth);

@@ -9,47 +9,26 @@ import {
   type Address,
   type KeyPairSigner,
 } from "@solana/kit";
-import type { ScriptProfile } from "./profile.js";
 import type { ScriptContext } from "./types.js";
 
 // RPC precedence (highest to lowest):
 //   1. --rpc-url CLI flag (rpcUrlOverride)
 //   2. RPC_URL env
 //   3. HELIUS_RPC_URL env
-//   4. profile.rpcUrl
-export function resolveRpcUrl(
-  rpcUrlOverride?: string,
-  profileRpcUrl?: string,
-): string {
+export function resolveRpcUrl(rpcUrlOverride?: string): string {
   const rpcUrl =
-    rpcUrlOverride ||
-    process.env.RPC_URL ||
-    process.env.HELIUS_RPC_URL ||
-    profileRpcUrl;
+    rpcUrlOverride || process.env.RPC_URL || process.env.HELIUS_RPC_URL;
 
   if (!rpcUrl) {
     throw new Error(
-      "RPC URL is required. Pass --rpc-url, or set RPC_URL or HELIUS_RPC_URL, or add rpcUrl to the profile.",
+      "RPC URL is required. Pass --rpc-url, or set RPC_URL or HELIUS_RPC_URL.",
     );
   }
 
   return rpcUrl;
 }
 
-export function createScriptContext(
-  profile: ScriptProfile,
-  rpcUrlOverride?: string,
-): ScriptContext {
-  const rpcUrl = resolveRpcUrl(rpcUrlOverride, profile.rpcUrl);
-
-  return {
-    profile,
-    rpcUrl,
-    rpc: createSolanaRpc(rpcUrl),
-  };
-}
-
-export function createRpcScriptContext(rpcUrlOverride?: string): ScriptContext {
+export function createScriptContext(rpcUrlOverride?: string): ScriptContext {
   const rpcUrl = resolveRpcUrl(rpcUrlOverride);
 
   return {

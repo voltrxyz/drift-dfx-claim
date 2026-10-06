@@ -62,6 +62,21 @@ export function parseEligibility(value: unknown): Array<DfxEligibilityEntry> {
 export const ELIGIBILITY_MAX_ATTEMPTS = 4;
 const ELIGIBILITY_RETRY_BASE_DELAY_MS = 500;
 
+/** Cache the entire load, including its retry sequence, for one command run. */
+export function createEligibilityLoader(
+  options: Omit<Parameters<typeof loadEligibility>[0], "claimant"> = {},
+): (claimant: Address) => Promise<Array<DfxEligibilityEntry>> {
+  const requests = new Map<Address, Promise<Array<DfxEligibilityEntry>>>();
+  return (claimant) => {
+    let request = requests.get(claimant);
+    if (!request) {
+      request = loadEligibility({ ...options, claimant });
+      requests.set(claimant, request);
+    }
+    return request;
+  };
+}
+
 export async function loadEligibility(args: {
   claimant: Address;
   file?: string;
