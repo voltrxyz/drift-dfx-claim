@@ -1,0 +1,98 @@
+{
+  "note": "Produced by voltr-drift-adaptor tests/drift-dfx.ts claimInstruction() logic (validated end-to-end in LiteSVM against the mainnet voltr vault + merkle distributor binaries, snapshot slot 453526241). Manager = Keypair.fromSeed(sha256('drift-dfx-test:manager')).",
+  "managerSecretSeedHex": "615af5d356ff9789e46e20de860bd9771a26d7abb688aff4370141d82a27b088",
+  "manager": "D2m5ou5E2rFRQaE6DVvm616DQAJG35mh2uTvBLEw49wo",
+  "vault": "BEfCK5fY8xUZdhY1GWfnkjUJ9e24XsHNZaJrySHzqP99",
+  "strategy": "FCxpLFtjChHjJ86V9mYFTN2QGXHPxR5LjLPGVGBA68rJ",
+  "vaultStrategyAuth": "j2jv8JVUYAktxBNUUHtC4cvK71GF6Uja4gMBq5CKjNN",
+  "distributor": "5XKvUzGrvcz3HRPpxaYkjwBKWbZUGyHpV5z6Bq4sChip",
+  "claimStatus": "8JyV7iohbinE7a7YFRXyrTGQFHmqbMQ28wMuhuyvEy6n",
+  "distributorTokenAccount": "5Cz5gsaNP1NomhyYzar3aK7qidmmVESaVYgwJ3v634gk",
+  "claimantTokenAccount": "D9UNEtAu6avbSJ3EDisezE4xSS5cxtsR3YJwS8gmFJiE",
+  "recipientTokenAccount": "GFrMp26ZoDbFJx23mEXLZifKU6DycQGW6QeGG5ZfZLwm",
+  "claimDfxDiscriminator": [
+    4,
+    248,
+    191,
+    35,
+    18,
+    146,
+    249,
+    134
+  ],
+  "instruction": {
+    "programAddress": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+    "accounts": [
+      {
+        "address": "D2m5ou5E2rFRQaE6DVvm616DQAJG35mh2uTvBLEw49wo",
+        "role": "WRITABLE_SIGNER"
+      },
+      {
+        "address": "D2m5ou5E2rFRQaE6DVvm616DQAJG35mh2uTvBLEw49wo",
+        "role": "READONLY_SIGNER"
+      },
+      {
+        "address": "4sycXz9Xwevedo6eiXR8QEhY8yrQrkNS4G1deY9tAD2Y",
+        "role": "READONLY"
+      },
+      {
+        "address": "BEfCK5fY8xUZdhY1GWfnkjUJ9e24XsHNZaJrySHzqP99",
+        "role": "READONLY"
+      },
+      {
+        "address": "FCxpLFtjChHjJ86V9mYFTN2QGXHPxR5LjLPGVGBA68rJ",
+        "role": "READONLY"
+      },
+      {
+        "address": "4H9764qe1piJZE9X2Lcy41CmqV9mDJsqtA9GWiLHWfKi",
+        "role": "READONLY"
+      },
+      {
+        "address": "Cs2yyjtWkhyXWhz4EYq7F3sTVTre6Qnv7fifz9kdGHtk",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "j2jv8JVUYAktxBNUUHtC4cvK71GF6Uja4gMBq5CKjNN",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "EBN93eXs5fHGBABuajQqdsKRkCgaqtJa8vEFD6vKXiP",
+        "role": "READONLY"
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "role": "READONLY"
+      },
+      {
+        "address": "5XKvUzGrvcz3HRPpxaYkjwBKWbZUGyHpV5z6Bq4sChip",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "8JyV7iohbinE7a7YFRXyrTGQFHmqbMQ28wMuhuyvEy6n",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "5Cz5gsaNP1NomhyYzar3aK7qidmmVESaVYgwJ3v634gk",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "D9UNEtAu6avbSJ3EDisezE4xSS5cxtsR3YJwS8gmFJiE",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "GFrMp26ZoDbFJx23mEXLZifKU6DycQGW6QeGG5ZfZLwm",
+        "role": "WRITABLE"
+      },
+      {
+        "address": "distAitdwx9mDm3SaPMtGZRjpXMPUenLhmPwoySV3Hp",
+        "role": "READONLY"
+      },
+      {
+        "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "role": "READONLY"
+      }
+    ],
+    "dataHex": "d0779091b23969fc010800000004f8bf231292f98601d4010000c3d0b9c56300000000000000000000000e000000e5956c188261900e3544dc035f9ecd5e4fe532b53a558c9132bc87037ad976edb83edd481e8d6f91b16bcf75afda472f79202306c11faea158b1cdac01fc27bc73ae0c56435f60796534266d6804f1cabae912de6fa8db945b7de9a3fc23d04fb3827e95942875a5eca511cdb0299fa3cdeb4c5005c9eb9cb65f1b99b716400906e9fec5c1f6ab465e1259ff17beaf565aab394810c76a241baccffbfc5fe124f078e8d7d785961fbba97f264d4013ceba353626313e7a23b0fc2bd51d7a0f9c35c5a576612eaa4080fdb376865b1d4a638884877ca61dc9d58a8f5eede89914076f17e4e8ed6073b516ce4cbdaea9afec4a3a0c71a25eeae006e5c6c1bf3e212f3fedb888d576c267992fb56bada1331aec470713c4b0e4835d70f8277f857c7eaada1fc0636c7dbc55f34a8c1890168ed8fc8700dd2263166bab770b9464fbf44a4269851cc804365bc579356d614f5cabb41f55a829c693b3b01379c001873ae97f5e18696bce872f09b23b3c8138354c32c7a639f606cb198da76ec027364cd32a280f2379ee3cf789b6cc05dbf3f352d3564e382bc045ebfb027b9b30a4e40ad92f6f734ff29b108f12bb856b1e3556c719b482a4057886265c8c0473d0",
+    "dataLength": 494
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+# Operators keep their profiles private; the shared examples are tracked.
+configs/*
+!configs/examples/
+!configs/examples/**

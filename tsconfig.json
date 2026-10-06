@@ -1,0 +1,15 @@
+// Adapted from voltr-integration-scripts tsconfig.base.json (19072d0).
+// Strict checking is a separate offline gate; tsx runs source without emitting files.
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

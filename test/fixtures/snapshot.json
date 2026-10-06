@@ -1,0 +1,147 @@
+{
+  "rpc": "https://api.mainnet-beta.solana.com",
+  "commitment": "finalized",
+  "slot": 453526241,
+  "clock": {
+    "slot": "453526241",
+    "epoch_start_timestamp": "1791093247",
+    "epoch": "1049",
+    "leader_schedule_epoch": "1050",
+    "unix_timestamp": "1791189137"
+  },
+  "original_manager": "82Hmm6XirBH6CKjj8sMUZkdARue4mkT5PdU3LNU25WcX",
+  "programs": [
+    {
+      "address": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+      "file": "voltr_vault.so",
+      "sha256": "bf1c1831b3d6350f4340badb942bd2e7bfaca4aa89276cb65e8480aa30d44c56"
+    },
+    {
+      "address": "distAitdwx9mDm3SaPMtGZRjpXMPUenLhmPwoySV3Hp",
+      "file": "merkle_distributor.so",
+      "sha256": "d0fd797ced308d8df011055fc83889c9d0dd4523fba4b864da1e21712fac0247"
+    }
+  ],
+  "accounts": {
+    "protocol": {
+      "address": "4sycXz9Xwevedo6eiXR8QEhY8yrQrkNS4G1deY9tAD2Y",
+      "account": {
+        "lamports": 1656480,
+        "owner": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+        "executable": false,
+        "data": [
+          "LSdlK3NIgyjfMO+nZMB+lniCjfd1q2I2ZFhScN1kyx2S5lXQ6Fe2UP8fAAD+AN8w76dkwH6WeIKN93WrYjZkWFJw3WTLHZLmVdDoV7ZQpTLUmGeXo2M2dR1EtpmE8XAxjFYnprR74fedyr/Fa94=",
+          "base64"
+        ]
+      }
+    },
+    "vault": {
+      "address": "BEfCK5fY8xUZdhY1GWfnkjUJ9e24XsHNZaJrySHzqP99",
+      "account": {
+        "lamports": 7349760,
+        "owner": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+        "executable": false,
+        "data": [
+          "0wjoKwKYdXdEcmlmdFBhY2sgQXJiaXRyYWdlAAAAAAAAAAAAAAAAAERyaWZ0UGFjayBBcmJpdHJhZ2UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADG+nrzvtutOj1l82qryXQxsbvkwtL24OR8pgIDRS9dYYwF0Oui6SAsDKmmYetsAK5yGnRua8ArkREABrrgZ5jNukraoxAAAAD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD6/5v8+cCWiFP2n+2NKYkca5OfDLok2PPpA3jrWpI0Sf/+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoVlpn4jPobhZIgK9w7plUCdppenZeuasdlgf2uJNtcE6V7G+gOlOVTgJWF1R3TggQpMm1p4ipWA8N0560oho3AKByThgJAAAAAAAAAAAAAAAAAAAAAAAAAKMCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAHAADIAAAAAAAAADIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnmstpAAAAAIUSumoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAAXicDBEwAAAAAAAAAAAAAAIZMs2oAAAAAAAAAAAAAAACGTLNqAAAAAAQAAAAAAAAAv4oBAAAAAACClSVqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+          "base64"
+        ]
+      }
+    },
+    "adaptor_add_receipt": {
+      "address": "4H9764qe1piJZE9X2Lcy41CmqV9mDJsqtA9GWiLHWfKi",
+      "account": {
+        "lamports": 1948800,
+        "owner": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+        "executable": false,
+        "data": [
+          "aWPbm03xB3eYFJtm77xn1HTX4JFdQAH1qgQowQ4NslRNk0Pylu3UQANgRQfZCj3kRg7EZf1/wG2ZVpbeucTk9ldd3i9w6avYAf0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ]
+      }
+    },
+    "strategy_init_receipt": {
+      "address": "Cs2yyjtWkhyXWhz4EYq7F3sTVTre6Qnv7fifz9kdGHtk",
+      "account": {
+        "lamports": 2227200,
+        "owner": "vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8",
+        "executable": false,
+        "data": [
+          "MwjA/XNOcNaYFJtm77xn1HTX4JFdQAH1qgQowQ4NslRNk0Pylu3UQNMUHgdVSBoFeFN3j60cncbym6VQb9b3o6DODhngzjJ/A2BFB9kKPeRGDsRl/X/AbZlWlt65xOT2V13eL3Dpq9gAAAAAAAAAADIg12kAAAAAAf7/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "base64"
+        ]
+      }
+    },
+    "vault_strategy_auth": {
+      "address": "j2jv8JVUYAktxBNUUHtC4cvK71GF6Uja4gMBq5CKjNN",
+      "account": null
+    },
+    "strategy": {
+      "address": "FCxpLFtjChHjJ86V9mYFTN2QGXHPxR5LjLPGVGBA68rJ",
+      "account": null
+    },
+    "distributor": {
+      "address": "5XKvUzGrvcz3HRPpxaYkjwBKWbZUGyHpV5z6Bq4sChip",
+      "account": {
+        "lamports": 3340800,
+        "owner": "distAitdwx9mDm3SaPMtGZRjpXMPUenLhmPwoySV3Hp",
+        "executable": false,
+        "data": [
+          "TXeLRlT3DBr/BgAAAAAAAAApzMXzoAXP1iXEyZQmnXowLiOf3lvM3UKwWl9IbC96wwlk9MNjOE7B9D4xlzEzJOxPSXsZ/46vAVV4j1x5jpU4PoCtl2/Cutz1Bxk6nPqh+e1ML95o53NQeeXEUv/F9y2jqhkjghoAAOAuAAAAAAAAZhYzAxMGAAAAAAAAAAAAAI0BAAAAAAAAUMNyagAAAABRw3JqAAAAAAAgGG0AAAAAfNE/PFOmc1NVakIDxr5++6jZyD5A/MylqApx3rrE/rNy89QICPcXgXNwUy2Urc5rlbuFP4aPLQPPeU5Sc2Q3owAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+          "base64"
+        ]
+      }
+    },
+    "distributor_token_account": {
+      "address": "5Cz5gsaNP1NomhyYzar3aK7qidmmVESaVYgwJ3v634gk",
+      "account": {
+        "lamports": 2039280,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "executable": false,
+        "data": [
+          "CWT0w2M4TsH0PjGXMTMk7E9Jexn/jq8BVXiPXHmOlThDM5E5L0JHpLS/mij5oWzZh4V4qdXJvoArvBv6ANfI0T2U5h9vFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "base64"
+        ]
+      }
+    },
+    "dfx_mint": {
+      "address": "dfxQsZjikuu5DGXPgX7yEpRog74HT5cJgytT3i5iLtw",
+      "account": {
+        "lamports": 1461600,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "executable": false,
+        "data": [
+          "AAAAAAbfNymmacuoGX1GUQvvnLF6XpTyvyeLE0bkxp6OPyiJe/hssqwPAQAGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+          "base64"
+        ]
+      }
+    },
+    "claim_status": {
+      "address": "8JyV7iohbinE7a7YFRXyrTGQFHmqbMQ28wMuhuyvEy6n",
+      "account": null
+    },
+    "clock": {
+      "address": "SysvarC1ock11111111111111111111111111111111",
+      "account": {
+        "lamports": 1169280,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "executable": false,
+        "data": [
+          "4UIIGwAAAAD/6cFqAAAAABkEAAAAAAAAGgQAAAAAAACRYMNqAAAAAA==",
+          "base64"
+        ]
+      }
+    },
+    "rent": {
+      "address": "SysvarRent111111111111111111111111111111111",
+      "account": {
+        "lamports": 1009200,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "executable": false,
+        "data": [
+          "2BMAAAAAAAAAAAAAAADwPzI=",
+          "base64"
+        ]
+      }
+    }
+  }
+}
